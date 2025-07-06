@@ -12,15 +12,21 @@ import messageRoute from "./routes/message.route.js";
 
 dotenv.config();
 
-// Removed deprecated options from mongoose.connect
 mongoose.connect(process.env.DATABASE_URL)
   .then(() => console.log("Connected to MongoDB!"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const app = express();
 
-// Only use one CORS middleware, with env variable for frontend URL
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+// Allow both deployed and local frontend in CORS
+app.use(cors({
+  origin: [
+    "https://heaven-root-1.onrender.com",
+    "http://localhost:5173"
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 
