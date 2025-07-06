@@ -10,15 +10,16 @@ import userRoute from "./routes/user.route.js";
 import chatRoute from "./routes/chat.route.js";
 import messageRoute from "./routes/message.route.js";
 
-
 dotenv.config();
 
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+// Removed deprecated options from mongoose.connect
+mongoose.connect(process.env.DATABASE_URL)
   .then(() => console.log("Connected to MongoDB!"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const app = express();
 
+// Only use one CORS middleware, with env variable for frontend URL
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
@@ -29,7 +30,6 @@ app.use("/api/posts", postRoute);
 app.use("/api/test", testRoute);
 app.use("/api/chats", chatRoute);
 app.use("/api/messages", messageRoute);
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.listen(8800, () => {
   console.log("Server is running!");
